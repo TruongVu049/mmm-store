@@ -1,0 +1,7 @@
+DirectoryIndex index.php index.html
+RewriteEngine On
+ErrorDocument 404 /Web_THOITRANGTREEM/404.html
+ErrorDocument 500 /Web_THOITRANGTREEM/404.html
+ErrorDocument 403 /Web_THOITRANGTREEM/404.html
+ErrorDocument 400 /Web_THOITRANGTREEM/404.html
+ErrorDocument 401 /Web_THOITRANGTREEM/404.html
