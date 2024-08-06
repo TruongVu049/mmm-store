@@ -9,8 +9,13 @@ if (Session::checkAuth()) {
 
 ?>
 <?php
+$mes = "";
 if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST' && isset($_POST['email'], $_POST['password'])) {
     $dnhapKh = new KhachHang();
+    if (empty($_POST['email']) || empty($_POST['password'])) {
+        $mes = "Thiếu thông tin email hoặc password";
+        http_response_code(400);
+    }
     $dnhap = $dnhapKh->danhNhap($_POST);
     if ($dnhap != false) {
         Session::set("cuslogin", true);
@@ -18,11 +23,16 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST' && isset($_POST['email'], 
         Session::set("cusName", $dnhap['ten']);
         Session::set("cusEmail", $dnhap['email']);
         Session::set("exp", time());
+        http_response_code(200);
+        $mes = "Đăng nhập thành cống";
         if (trim($_POST['historyState']) != "undefined" && ('' === "chitietsanpham.php?spid" || false !== strpos(trim($_POST['historyState']), "chitietsanpham.php?spid"))) {
             echo "<script>location.href='" . trim($_POST['historyState']) . "'</script>";
         } else {
             echo "<script>location.href='index.php'</script>";
         }
+    } else {
+        $mes = "Thông tin email và mật khẩu không chính xác!";
+        http_response_code(401);
     }
 }
 
@@ -48,7 +58,7 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST' && isset($_POST['email'], 
                     <div>
                         <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
                         <div class="mt-1">
-                            <input value="<?php echo $_POST['email'] ?? "" ?>" id="email" name="email" type="email" autocomplete="email"  class="block w-full rounded-md  py-2 px-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-green-300 sm:text-sm sm:leading-6">
+                            <input value="<?php echo $_POST['email'] ?? "" ?>" id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md  py-2 px-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-green-300 sm:text-sm sm:leading-6">
                             <span class="errEmai hid md:text-base text-sm text-red-500"></span>
                         </div>
                     </div>

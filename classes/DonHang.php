@@ -63,8 +63,18 @@ class DonHang
             $queryU = substr($queryU, 0, strlen($queryU) - 1);
             $diaChi = $this->db->selectNonParam("select * from diachi where diachi.id = " . $data['addressId'] . " and diachi.KhachHang_id = " . $data['userId']);
             date_default_timezone_set('Asia/Ho_Chi_Minh');
-            $queryHd = "insert into donhang(donhang.tongtien, donhang.ngaytao, donhang.KhachHang_id, donhang.TrangThaiDonHang_id, donhang.diachi) 
-            values(" . $tongTien . ", '" . date('Y-m-d H:i:s') . "', " . $data['userId'] . ", 1, '" . $diaChi[0]['sdt'] . ", " . $diaChi[0]['diachicuthe'] . ", " . $diaChi[0]['diachi'] . "')";
+            
+             $trangthai = isset($data["isThanhToan"]) ? 2 : 1;
+            $isThanhtoan = isset($data["isThanhToan"]) ? 1 : 0;
+            $queryHd = "insert into donhang(donhang.tongtien, donhang.ngaytao, donhang.KhachHang_id, donhang.TrangThaiDonHang_id, donhang.diachi, donhang.isThanhToan) 
+            values(" . $tongTien . ", '" . date('Y-m-d H:i:s') . "', " . $data['userId'] . ", $trangthai, N'" . $diaChi[0]['sdt'] . ", " . $diaChi[0]['diachicuthe'] . ", " . $diaChi[0]['diachi'] . "', $isThanhtoan)";
+
+            if ($isThanhtoan == 1) {
+                $queryHd = "insert into donhang(donhang.tongtien, donhang.ngaytao, donhang.ngaysua, donhang.KhachHang_id, donhang.TrangThaiDonHang_id, donhang.diachi, donhang.isThanhToan) 
+            values(" . $tongTien . ", '" . date('Y-m-d H:i:s') . "', '" . date('Y-m-d H:i:s') . "'," . $data['userId'] . ", $trangthai, N'" . $diaChi[0]['sdt'] . ", " . $diaChi[0]['diachicuthe'] . ", " . $diaChi[0]['diachi'] . "', $isThanhtoan)";
+            } else {
+                $queryHd = "insert into donhang(donhang.tongtien, donhang.ngaytao, donhang.KhachHang_id, donhang.TrangThaiDonHang_id, donhang.diachi, donhang.isThanhToan) 
+            values(" . $tongTien . ", '" . date('Y-m-d H:i:s') . "', " . $data['userId'] . ", $trangthai, N'" . $diaChi[0]['sdt'] . ", " . $diaChi[0]['diachicuthe'] . ", " . $diaChi[0]['diachi'] . "', $isThanhtoan)";
 
             $this->db->conn->beginTransaction();
             $dhId = $this->db->insertNonParam($queryHd);

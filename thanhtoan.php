@@ -290,21 +290,23 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST' && isset($_POST['typeCheck
         <h2 class="md:text-xl text-lg capitalize flex items-center gap-3">Phương Thức Thanh Toán</h2>
         <ul class="mt-3">
             <label class="cursor-pointer flex items-center">
-                <input type="radio" checked name="color" class="accent-rose-500 w-4 h-4" value="5">
+                <input type="radio" checked name="bankCode" class="accent-rose-500 w-4 h-4" value="cod">
                 <p class="ml-3 flex gap-2 md:text-sm text-xs text-gray-800 items-center">
                     <img class="h-8 w-8" src="./public/images/img-odcod.webp" alt="">
                     Thanh toán khi nhận hàng (COD)
                 </p>
             </label>
             <label class="cursor-pointer flex items-center mt-3">
-                <input type="radio"  name="color" class="accent-rose-500 w-4 h-4" value="5">
+                <input id="bankCode" type="radio" name="bankCode" class="accent-rose-500 w-4 h-4" value="">
                 <p class="ml-3 flex gap-2 md:text-sm text-xs text-gray-800 items-center">
-                    <img class="h-8 w-8" src="./public/images/img-odmm.jpg" alt="">
-                    Thanh toán qua MoMo
+                    <img class="h-8 w-8" src="./public/images/vnpay-logo.webp" alt="">
+                    Thanh toán qua Vnpay
                 </p>
             </label>
         </ul>
     </div>
+    <input class="sr-only" type="radio" checked id="language" Checked="True" name="language" value="vn">
+
     <div class="p-4 bg-white shadow-md border border-gray-200 rounded-md">
         <div class="flex items-center justify-between">
             <h2 class="md:text-xl text-lg capitalize flex items-center gap-3"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="text-rose-500" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -315,6 +317,8 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST' && isset($_POST['typeCheck
         <div class="lg:w-80 md:w-72  md:float-right">
             <h4 class="md:text-base text-sm flex justify-between items-center pb-2">Tổng tiền hàng:<span><?php echo "đ " . number_format($tongTien, 0, '', ',')  ?></span></h4>
             <h4 class="md:text-base text-sm flex justify-between items-center pb-2">Phí vận chuyển:<span><?php echo "đ " . number_format($phiVanChuyen, 0, '', ',')  ?></span></h4>
+            <input class="sr-only" data-val="true" data-val-number="The field Amount must be a number." id="amount" name="amount" type="number" value="<?php echo ($tongTien + $phiVanChuyen) ?>" />
+
             <h4 class="md:text-lg text-base flex justify-between items-center pb-2">Tổng thanh toán:<strong class="text-rose-500 md:text-2xl text-lg"><?php echo "đ " . number_format($tongTien + $phiVanChuyen, 0, '', ',')  ?></strong></h4>
         </div>
         <div class="clear-both"></div>
@@ -372,7 +376,7 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST' && isset($_POST['typeCheck
 <script>
     let selectedId = document.querySelector("input[type='radio'][name=address]:checked")?.value; // type string
     let arrAddress = <?php echo json_encode($dsDiaChi) ?? '[]' ?>;
-    
+
     const modal = document.querySelector("#modal-address");
     const form = document.querySelector("#formAd");
     // open modal
@@ -389,10 +393,9 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST' && isset($_POST['typeCheck
     //submit
     form.addEventListener("submit", (e) => {
         e.preventDefault();
-        if (document.querySelector("input[type='radio'][name=address]:checked").value === selectedId){
-            
-        }
-        else {
+        if (document.querySelector("input[type='radio'][name=address]:checked").value === selectedId) {
+
+        } else {
             selectedId = document.querySelector("input[type='radio'][name=address]:checked").value;
             let address = arrAddress.find(item => parseInt(item.id) === parseInt(selectedId));
             document.querySelector("input[name='addressId']").value = address['id'];
